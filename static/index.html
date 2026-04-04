@@ -186,6 +186,7 @@
         const sizeSlider = document.getElementById('fontSizeSlider');
         sizeSlider.oninput = (e) => {
             fontSizeMultiplier = parseFloat(e.target.value);
+            document.documentElement.style.fontSize = `${fontSizeMultiplier * 100}%`;
             renderElectives();
         };
 
@@ -296,15 +297,15 @@
 
             ctx.textAlign = 'center';
             ctx.fillStyle = isDarkMode ? '#FFFFFF' : '#4034af';
-            ctx.font = '800 96px Inter';
+            ctx.font = `800 ${Math.round(96 * fontSizeMultiplier)}px Inter`;
             ctx.fillText('PERSONAL PLAN', width / 2, startY - 260);
             
             ctx.fillStyle = '#d9f99d'; // Mint
-            ctx.font = '700 38px Inter';
+            ctx.font = `700 ${Math.round(38 * fontSizeMultiplier)}px Inter`;
             ctx.fillText(TIMETABLE_DATA.timetable.class.toUpperCase(), width / 2, startY - 180);
 
             const days = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
-            ctx.font = '700 32px Inter';
+            ctx.font = `700 ${Math.round(32 * fontSizeMultiplier)}px Inter`;
             ctx.fillStyle = isDarkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)';
             days.forEach((day, i) => ctx.fillText(day, margin + (i * colWidth) + (colWidth / 2), startY - 60));
 
@@ -331,7 +332,7 @@
                         ctx.fillText(activeData.subject, x + (colWidth/2), y + rowHeight / 2);
                     }
 
-                    ctx.font = '600 18px "IBM Plex Mono"';
+                    ctx.font = `600 ${Math.round(18 * fontSizeMultiplier)}px "IBM Plex Mono"`;
                     ctx.fillStyle = '#4034af';
                     ctx.fillText(p.time.split(' - ')[0], x + (colWidth/2), y + rowHeight - 38);
                 });
