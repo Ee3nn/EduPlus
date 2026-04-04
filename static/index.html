@@ -41,10 +41,16 @@
                 <p class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">IB Student Portal</p>
             </div>
         </div>
-        <button id="themeToggle" class="p-2.5 rounded-full bg-white/5 hover:bg-white/10 active:scale-90 transition-all">
-            <svg id="sunIcon" class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            <svg id="moonIcon" class="hidden w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-        </button>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+                <span class="text-[10px] font-bold uppercase tracking-wider opacity-50">Size</span>
+                <input type="range" id="fontSizeSlider" min="0.8" max="1.5" step="0.1" value="1" class="w-16 h-1.5 bg-indigo-500/20 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+            </div>
+            <button id="themeToggle" class="p-2.5 rounded-full bg-white/5 hover:bg-white/10 active:scale-90 transition-all">
+                <svg id="sunIcon" class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <svg id="moonIcon" class="hidden w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+        </div>
     </nav>
 
     <main class="max-w-xl mx-auto px-6 py-12 pb-44">
@@ -174,6 +180,14 @@
         const NO_ATTENDANCE = "No Attendance";
         let isDarkMode = true;
         let selectedElectives = {};
+        let fontSizeMultiplier = 1.0;
+
+        // Font Size Logic
+        const sizeSlider = document.getElementById('fontSizeSlider');
+        sizeSlider.oninput = (e) => {
+            fontSizeMultiplier = parseFloat(e.target.value);
+            renderElectives();
+        };
 
         // 1. Theme Logic
         const themeBtn = document.getElementById('themeToggle');
@@ -185,6 +199,9 @@
             document.getElementById('btnCalendar').className = `w-full h-15 font-bold rounded-2xl flex items-center justify-center gap-3 border transition-all active:scale-[0.98] transition-theme ${isDarkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-slate-100 border-slate-200 hover:bg-slate-200'}`;
             document.getElementById('homeroomContainer').className = `relative p-1 rounded-2xl transition-theme ${isDarkMode ? 'bg-white/5 border border-white/10' : 'bg-white border border-slate-200 shadow-sm'}`;
             
+            // Update Size Slider Container
+            sizeSlider.parentElement.className = `flex items-center gap-2 px-3 py-1.5 rounded-full border transition-theme ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200'}`;
+
             document.getElementById('sunIcon').classList.toggle('hidden', !isDarkMode);
             document.getElementById('moonIcon').classList.toggle('hidden', isDarkMode);
             renderElectives();
@@ -234,7 +251,7 @@
                             ? 'border-indigo-500 bg-indigo-500 text-white shadow-lg' 
                             : isDarkMode ? 'bg-white/5 border-transparent hover:border-white/20' : 'bg-slate-50 border-transparent hover:border-slate-200'
                         }">
-                            <span class="font-bold text-base ${option === NO_ATTENDANCE ? 'italic opacity-60 font-normal' : ''}">${option}</span>
+                            <span class="font-bold ${option === NO_ATTENDANCE ? 'italic opacity-60 font-normal' : ''}" style="font-size: ${1 * fontSizeMultiplier}rem">${option}</span>
                             ${isActive ? '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>' : '<svg class="w-4 h-4 opacity-20 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>'}
                         </button>
                     `;
@@ -305,7 +322,7 @@
                     ctx.fill();
 
                     ctx.fillStyle = isDarkMode ? '#FFFFFF' : '#000000';
-                    ctx.font = 'bold 24px Inter';
+                    ctx.font = `bold ${Math.round(24 * fontSizeMultiplier)}px Inter`;
                     const words = activeData.subject.split(' ');
                     if (words.length > 1 && activeData.subject.length > 8) {
                         ctx.fillText(words[0], x + (colWidth/2), y + 65);
