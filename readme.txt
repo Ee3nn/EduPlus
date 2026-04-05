@@ -1,4 +1,4 @@
-Project Name: Edu+
+Project Name: Compass7
 
 Genre: Education App/Website
 
@@ -6,27 +6,20 @@ Genre: Education App/Website
 What is the purpose of this application/website?
 
 
-create a better timetable for ib students compared
-to the current timetable provided on the edupage
-website
+A website that serves as a useful tool for IB students
 
 
 specifics:
 
-input 1. current edupage timetable(pdf/screenshot)
+1. Timetable Generator:
+
+input 1. current timetable(pdf/screenshot)
       2. class selection
 
 output organized timetable without the extra
        unselected classed
 
        the new timetable should be able to be
-       downloaded as a picture
+       downloaded as a picture/calendar file
 
-
-
-
-
-
-if possible, the updated timetable should be shown
-on the desktop of a computer/phone, like the calendar
-app on Iphones
+2. Coming Soon...
