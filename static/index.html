@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ManageIB | Personalized IB Schedule</title>
+    <title>Compass7 | Personalized IB Schedule</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
     <style>
@@ -27,17 +27,51 @@
         ::-webkit-scrollbar { display: none; }
         
         .transition-theme { transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease; }
+
+        /* Minecraft Compass Icon */
+        .compass-icon {
+            width: 40px;
+            height: 40px;
+            background: #373737;
+            border: 3px solid #1e1e1e;
+            border-radius: 8px;
+            position: relative;
+            image-rendering: pixelated;
+            box-shadow: inset -2px -2px 0 #212121, inset 2px 2px 0 #4a4a4a;
+        }
+        .compass-needle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 16px;
+            background: #ff0000;
+            transform: translate(-50%, -50%) rotate(45deg);
+            box-shadow: 0 0 5px rgba(255,0,0,0.5);
+        }
+        .compass-7 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: 900;
+            font-size: 18px;
+            text-shadow: 2px 2px 0 #000;
+            z-index: 10;
+        }
     </style>
 </head>
 <body class="dark-theme transition-theme min-h-screen">
     <!-- Navbar -->
     <nav id="navbar" class="sticky top-0 z-50 glass border-b border-white/5 px-6 py-4 flex items-center justify-between transition-theme bg-black/60">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-indigo-custom flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
-                <span class="font-black text-lg">MI</span>
+            <div class="compass-icon flex items-center justify-center">
+                <div class="compass-needle"></div>
+                <span class="compass-7">7</span>
             </div>
             <div>
-                <h1 class="text-lg font-bold">ManageIB</h1>
+                <h1 class="text-lg font-bold">Compass7</h1>
                 <p class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">IB Student Portal</p>
             </div>
         </div>
@@ -59,7 +93,7 @@
 
     <main class="max-w-xl mx-auto px-6 py-12 pb-44">
         <header class="mb-14">
-            <h2 class="text-4xl font-extrabold tracking-tight mb-4 leading-tight">Build your ManageIB Schedule</h2>
+            <h2 class="text-4xl font-extrabold tracking-tight mb-4 leading-tight">Build your Compass7 Schedule</h2>
             <p class="text-slate-500 text-lg">Transform institutional data into your personalized daily companion.</p>
         </header>
 
@@ -109,7 +143,7 @@
 
                 <div id="loginForm">
                     <h2 class="text-3xl font-black mb-2">Welcome Back</h2>
-                    <p class="text-slate-500 mb-8 text-sm">Sign in to your ManageIB account</p>
+                    <p class="text-slate-500 mb-8 text-sm text-center">Sign in to your Compass7 account</p>
                     <div class="space-y-4">
                         <input type="text" id="loginId" placeholder="Username or Email" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
                         <input type="password" id="loginPassword" placeholder="Password" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
@@ -119,8 +153,8 @@
                 </div>
 
                 <div id="registerForm" class="hidden">
-                    <h2 class="text-3xl font-black mb-2">Join ManageIB</h2>
-                    <p class="text-slate-500 mb-8 text-sm">Create your personalized portal</p>
+                    <h2 class="text-3xl font-black mb-2">Join Compass7</h2>
+                    <p class="text-slate-500 mb-8 text-sm text-center">Create your personalized portal</p>
                     <div class="space-y-4">
                         <input type="text" id="regUsername" placeholder="Username" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
                         <input type="email" id="regEmail" placeholder="Email Address" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
@@ -149,7 +183,7 @@
                 </div>
 
                 <h2 class="text-3xl font-black mb-2 text-center">My Profile</h2>
-                <p class="text-slate-500 mb-8 text-sm text-center">Manage your ManageIB account</p>
+                <p class="text-slate-500 mb-8 text-sm text-center">Manage your Compass7 account</p>
 
                 <div class="space-y-6">
                     <div class="space-y-2">
@@ -416,12 +450,12 @@
 
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'ManageIB_Lockscreen.png';
+            link.download = 'Compass7_Lockscreen.png';
             link.click();
         };
 
         document.getElementById('btnCalendar').onclick = () => {
-            let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//ManageIB//EN\n";
+            let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Compass7//EN\n";
             const now = new Date();
             const monday = new Date(now.setDate(now.getDate() + ((1 + 7 - now.getDay()) % 7 || 7)));
             const dayMap = { "Monday": 0, "Tuesday": 1, "Wednesday": 2, "Thursday": 3, "Friday": 4 };
@@ -447,7 +481,7 @@
             ics += "END:VCALENDAR";
             const link = document.createElement('a');
             link.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
-            link.download = 'ManageIB_Schedule.ics';
+            link.download = 'Compass7_Schedule.ics';
             link.click();
         };
 
