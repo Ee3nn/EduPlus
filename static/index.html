@@ -42,6 +42,10 @@
             </div>
         </div>
         <div class="flex items-center gap-4">
+            <button id="authBtn" class="flex items-center gap-2 bg-indigo-500/10 text-indigo-400 px-4 py-2 rounded-full border border-indigo-500/20 font-bold text-sm hover:bg-indigo-500/20 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span>Sign In</span>
+            </button>
             <div class="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
                 <span class="text-[10px] font-bold uppercase tracking-wider opacity-50">Size</span>
                 <input type="range" id="fontSizeSlider" min="0.8" max="1.5" step="0.1" value="1" class="w-16 h-1.5 bg-indigo-500/20 rounded-lg appearance-none cursor-pointer accent-indigo-500">
@@ -97,12 +101,42 @@
         </div>
 
         <canvas id="exportCanvas" style="display: none;"></canvas>
-    </main>
 
-    <footer class="text-center py-28 opacity-30 transition-theme">
-        <p class="text-[10px] uppercase tracking-[0.5em] font-black italic">Accuracy Protocol Active · Ver 2.5 (HTML)</p>
-    </footer>
+        <!-- Auth Modal -->
+        <div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+            <div class="w-full max-w-md glass border border-white/10 rounded-[2.5rem] p-8 relative transition-theme">
+                <button id="closeAuth" class="absolute top-6 right-6 p-2 rounded-full hover:bg-white/5 opacity-50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
 
+                <div id="loginForm">
+                    <h2 class="text-3xl font-black mb-2">Welcome Back</h2>
+                    <p class="text-slate-500 mb-8 text-sm">Sign in to your ManageIB account</p>
+                    <div class="space-y-4">
+                        <input type="text" id="loginId" placeholder="Username or Email" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
+                        <input type="password" id="loginPassword" placeholder="Password" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
+                        <button id="submitLogin" class="w-full h-14 bg-indigo-custom text-white font-black rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-indigo-500/20">Sign In</button>
+                        <p class="text-center text-xs text-slate-500">Don't have an account? <button id="switchToRegister" class="text-indigo-400 font-bold hover:underline">Create one</button></p>
+                    </div>
+                </div>
+
+                <div id="registerForm" class="hidden">
+                    <h2 class="text-3xl font-black mb-2">Join ManageIB</h2>
+                    <p class="text-slate-500 mb-8 text-sm">Create your personalized portal</p>
+                    <div class="space-y-4">
+                        <input type="text" id="regUsername" placeholder="Username" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
+                        <input type="email" id="regEmail" placeholder="Email Address" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
+                        <input type="password" id="regPassword" placeholder="Password" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
+                        <button id="submitRegister" class="w-full h-14 bg-indigo-custom text-white font-black rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-indigo-500/20">Create Account</button>
+                        <p class="text-center text-xs text-slate-500">Already have an account? <button id="switchToLogin" class="text-indigo-400 font-bold hover:underline">Sign In</button></p>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <footer class="text-center py-28 opacity-30 transition-theme">
+            <p class="text-[10px] uppercase tracking-[0.5em] font-black italic">Accuracy Protocol Active · Ver 2.5 (HTML)</p>
+            </footer>
+            </main>
+            </body>
     <script>
         const TIMETABLE_DATA = {
             "timetable": {
@@ -373,6 +407,79 @@
             link.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
             link.download = 'ManageIB_Schedule.ics';
             link.click();
+        };
+
+        // Auth Logic
+        const authModal = document.getElementById('authModal');
+        const authBtn = document.getElementById('authBtn');
+        const closeAuth = document.getElementById('closeAuth');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const switchToRegister = document.getElementById('switchToRegister');
+        const switchToLogin = document.getElementById('switchToLogin');
+
+        let currentUser = localStorage.getItem('mi_user');
+        if (currentUser) {
+            authBtn.querySelector('span').innerText = currentUser;
+        }
+
+        authBtn.onclick = () => {
+            if (currentUser) {
+                if (confirm('Logout?')) {
+                    fetch('/logout').then(() => {
+                        localStorage.removeItem('mi_user');
+                        currentUser = null;
+                        authBtn.querySelector('span').innerText = 'Sign In';
+                    });
+                }
+            } else {
+                authModal.classList.remove('hidden');
+            }
+        };
+
+        closeAuth.onclick = () => authModal.classList.add('hidden');
+        switchToRegister.onclick = () => { loginForm.classList.add('hidden'); registerForm.classList.remove('hidden'); };
+        switchToLogin.onclick = () => { registerForm.classList.add('hidden'); loginForm.classList.remove('hidden'); };
+
+        document.getElementById('submitRegister').onclick = async () => {
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            const res = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                alert('Account created! Please sign in.');
+                switchToLogin.click();
+            } else {
+                alert(data.message);
+            }
+        };
+
+        document.getElementById('submitLogin').onclick = async () => {
+            const loginId = document.getElementById('loginId').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ loginId, password })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                currentUser = data.username;
+                localStorage.setItem('mi_user', currentUser);
+                authBtn.querySelector('span').innerText = currentUser;
+                authModal.classList.add('hidden');
+            } else {
+                alert(data.message);
+            }
         };
 
         // Init
