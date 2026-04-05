@@ -70,11 +70,17 @@ def upload_avatar():
 def register():
     data = request.json
     username = data.get('username')
-    email = data.get('email')
+    email = data.get('email', '').lower() # Normalize email
     password = data.get('password')
 
-    if User.query.filter((User.username == username) | (User.email == email)).first():
-        return jsonify({"message": "User already exists"}), 400
+    if not username or not email or not password:
+        return jsonify({"message": "All fields are required"}), 400
+
+    if User.query.filter_by(username=username).first():
+        return jsonify({"message": "Username already taken"}), 400
+    
+    if User.query.filter_by(email=email).first():
+        return jsonify({"message": "Email already registered"}), 400
 
     hashed_pw = generate_password_hash(password)
     new_user = User(username=username, email=email, password_hash=hashed_pw)
