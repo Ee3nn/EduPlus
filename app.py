@@ -59,6 +59,59 @@ def logout():
     session.pop('user_id', None)
     return jsonify({"message": "Logged out"}), 200
 
+@app.route("/profile", methods=['GET'])
+def get_profile():
+    if 'user_id' not in session:
+        return jsonify({"message": "Unauthorized"}), 401
+    
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+        
+    return jsonify({
+        "username": user.username,
+        "email": user.email
+    }), 200
+
+@app.route("/profile/update", methods=['POST'])
+def update_profile():
+    if 'user_id' not in session:
+        return jsonify({"message": "Unauthorized"}), 401
+    
+    user = db.session.get(User, session['user_id'])
+    data = request.json
+    
+    new_username = data.get('username')
+    new_email = data.get('email')
+    new_password = data.get('password')
+    
+    if new_username:
+        if User.query.filter(User.username == new_username, User.id != user.id).first():
+            return jsonify({"message": "Username already taken"}), 400
+        user.username = new_username
+        
+    if new_email:
+        if User.query.filter(User.email == new_email, User.id != user.id).first():
+            return jsonify({"message": "Email already in use"}), 400
+        user.email = new_email
+        
+    if new_password:
+        user.password_hash = generate_password_hash(new_password)
+        
+    db.session.commit()
+    return jsonify({"message": "Profile updated successfully", "username": user.username}), 200
+
+@app.route("/profile/delete", methods=['POST'])
+def delete_account():
+    if 'user_id' not in session:
+        return jsonify({"message": "Unauthorized"}), 401
+    
+    user = db.session.get(User, session['user_id'])
+    db.session.delete(user)
+    db.session.commit()
+    session.pop('user_id', None)
+    return jsonify({"message": "Account deleted successfully"}), 200
+
 @app.route("/<path:path>")
 def static_files(path):
     return send_from_directory("static", path)

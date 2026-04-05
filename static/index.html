@@ -113,7 +113,7 @@
                     <div class="space-y-4">
                         <input type="text" id="loginId" placeholder="Username or Email" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
                         <input type="password" id="loginPassword" placeholder="Password" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
-                        <button id="submitLogin" class="w-full h-14 bg-indigo-custom text-white font-black rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-indigo-500/20">Sign In</button>
+                        <button id="submitLogin" class="w-full h-14 bg-indigo-custom text-white font-black rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-indigo-500/20">Sign In</button>
                         <p class="text-center text-xs text-slate-500">Don't have an account? <button id="switchToRegister" class="text-indigo-400 font-bold hover:underline">Create one</button></p>
                     </div>
                 </div>
@@ -125,13 +125,43 @@
                         <input type="text" id="regUsername" placeholder="Username" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
                         <input type="email" id="regEmail" placeholder="Email Address" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
                         <input type="password" id="regPassword" placeholder="Password" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
-                        <button id="submitRegister" class="w-full h-14 bg-indigo-custom text-white font-black rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-indigo-500/20">Create Account</button>
+                        <button id="submitRegister" class="w-full h-14 bg-indigo-custom text-white font-black rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-indigo-500/20">Create Account</button>
                         <p class="text-center text-xs text-slate-500">Already have an account? <button id="switchToLogin" class="text-indigo-400 font-bold hover:underline">Sign In</button></p>
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
 
+        <!-- Profile Modal -->
+        <div id="profileModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+            <div class="w-full max-w-md glass border border-white/10 rounded-[2.5rem] p-8 relative transition-theme">
+                <button id="closeProfile" class="absolute top-6 right-6 p-2 rounded-full hover:bg-white/5 opacity-50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+
+                <h2 class="text-3xl font-black mb-2">My Profile</h2>
+                <p class="text-slate-500 mb-8 text-sm">Manage your ManageIB account</p>
+
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] uppercase font-bold text-indigo-400 tracking-widest ml-1">Username</label>
+                        <input type="text" id="profileUsername" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] uppercase font-bold text-indigo-400 tracking-widest ml-1">Email Address</label>
+                        <input type="email" id="profileEmail" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] uppercase font-bold text-indigo-400 tracking-widest ml-1">New Password (Leave blank to keep same)</label>
+                        <input type="password" id="profilePassword" class="w-full h-14 bg-white/5 border border-white/10 rounded-2xl px-6 outline-none focus:border-indigo-500 transition-all font-bold">
+                    </div>
+
+                    <div class="flex flex-col gap-3 pt-4">
+                        <button id="btnUpdateProfile" class="w-full h-14 bg-indigo-custom text-white font-black rounded-2xl hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-indigo-500/20">Update Profile</button>
+                        <button id="btnLogout" class="w-full h-14 bg-white/5 border border-white/10 text-white font-black rounded-2xl hover:bg-white/10 active:scale-[0.98] transition-all">Sign Out</button>
+                        <button id="btnDeleteAccount" class="w-full h-12 text-rose-500 font-bold text-sm hover:underline mt-2">Delete Account Permanently</button>
+                    </div>
+                </div>
+            </div>
+        </div>
             <footer class="text-center py-28 opacity-30 transition-theme">
             <p class="text-[10px] uppercase tracking-[0.5em] font-black italic">Accuracy Protocol Active · Ver 2.5 (HTML)</p>
             </footer>
@@ -409,10 +439,12 @@
             link.click();
         };
 
-        // Auth Logic
+        // Profile & Auth Logic
         const authModal = document.getElementById('authModal');
+        const profileModal = document.getElementById('profileModal');
         const authBtn = document.getElementById('authBtn');
         const closeAuth = document.getElementById('closeAuth');
+        const closeProfile = document.getElementById('closeProfile');
         const loginForm = document.getElementById('loginForm');
         const registerForm = document.getElementById('registerForm');
         const switchToRegister = document.getElementById('switchToRegister');
@@ -423,21 +455,32 @@
             authBtn.querySelector('span').innerText = currentUser;
         }
 
+        const openProfile = async () => {
+            const res = await fetch('/profile');
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('profileUsername').value = data.username;
+                document.getElementById('profileEmail').value = data.email;
+                document.getElementById('profilePassword').value = '';
+                profileModal.classList.remove('hidden');
+            } else {
+                localStorage.removeItem('mi_user');
+                currentUser = null;
+                authBtn.querySelector('span').innerText = 'Sign In';
+                authModal.classList.remove('hidden');
+            }
+        };
+
         authBtn.onclick = () => {
             if (currentUser) {
-                if (confirm('Logout?')) {
-                    fetch('/logout').then(() => {
-                        localStorage.removeItem('mi_user');
-                        currentUser = null;
-                        authBtn.querySelector('span').innerText = 'Sign In';
-                    });
-                }
+                openProfile();
             } else {
                 authModal.classList.remove('hidden');
             }
         };
 
         closeAuth.onclick = () => authModal.classList.add('hidden');
+        closeProfile.onclick = () => profileModal.classList.add('hidden');
         switchToRegister.onclick = () => { loginForm.classList.add('hidden'); registerForm.classList.remove('hidden'); };
         switchToLogin.onclick = () => { registerForm.classList.add('hidden'); loginForm.classList.remove('hidden'); };
 
@@ -445,6 +488,8 @@
             const username = document.getElementById('regUsername').value;
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
+
+            if (!username || !email || !password) return alert('Fill all fields');
 
             const res = await fetch('/register', {
                 method: 'POST',
@@ -479,6 +524,50 @@
                 authModal.classList.add('hidden');
             } else {
                 alert(data.message);
+            }
+        };
+
+        document.getElementById('btnUpdateProfile').onclick = async () => {
+            const username = document.getElementById('profileUsername').value;
+            const email = document.getElementById('profileEmail').value;
+            const password = document.getElementById('profilePassword').value;
+
+            const res = await fetch('/profile/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password: password || undefined })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                currentUser = data.username;
+                localStorage.setItem('mi_user', currentUser);
+                authBtn.querySelector('span').innerText = currentUser;
+                alert('Profile updated!');
+                profileModal.classList.add('hidden');
+            } else {
+                alert(data.message);
+            }
+        };
+
+        document.getElementById('btnLogout').onclick = async () => {
+            await fetch('/logout');
+            localStorage.removeItem('mi_user');
+            currentUser = null;
+            authBtn.querySelector('span').innerText = 'Sign In';
+            profileModal.classList.add('hidden');
+        };
+
+        document.getElementById('btnDeleteAccount').onclick = async () => {
+            if (confirm('Are you absolutely sure? This cannot be undone.')) {
+                const res = await fetch('/profile/delete', { method: 'POST' });
+                if (res.ok) {
+                    localStorage.removeItem('mi_user');
+                    currentUser = null;
+                    authBtn.querySelector('span').innerText = 'Sign In';
+                    profileModal.classList.add('hidden');
+                    alert('Account deleted.');
+                }
             }
         };
 
