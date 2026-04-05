@@ -8,14 +8,23 @@ from PIL import Image
 app = Flask(__name__, static_folder="static")
 app.secret_key = os.urandom(24)
 
-# Configure Uploads
-UPLOAD_FOLDER = 'static/uploads/avatars'
+# Persistent Storage Logic for Azure
+is_azure = 'WEBSITE_SITE_NAME' in os.environ
+if is_azure:
+    # Use /home for persistent storage on Azure
+    db_path = '/home/users.db'
+    UPLOAD_FOLDER = '/home/avatars'
+else:
+    # Local development
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    db_path = os.path.join(basedir, 'users.db')
+    UPLOAD_FOLDER = os.path.join(basedir, 'static/uploads/avatars')
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Database Configuration
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'users.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -32,6 +41,11 @@ with app.app_context():
 @app.route("/")
 def index():
     return send_from_directory("static", "index.html")
+
+# Specialized route to serve avatars from persistent storage
+@app.route("/static/uploads/avatars/<path:filename>")
+def serve_avatar(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route("/avatar/upload", methods=['POST'])
 def upload_avatar():
@@ -62,6 +76,7 @@ def upload_avatar():
         
         user.profile_pic = filename
         db.session.commit()
+        # Return the public URL path
         return jsonify({"message": "Avatar uploaded", "url": f"/static/uploads/avatars/{filename}"}), 200
     except Exception as e:
         return jsonify({"message": str(e)}), 500
@@ -70,7 +85,7 @@ def upload_avatar():
 def register():
     data = request.json
     username = data.get('username')
-    email = data.get('email', '').lower() # Normalize email
+    email = data.get('email', '').lower()
     password = data.get('password')
 
     if not username or not email or not password:
