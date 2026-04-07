@@ -1,81 +1,65 @@
-import os
-import json
 import sys
-import google.generativeai as genai
-from typing import List
+import json
+try:
+    import docx
+except ImportError:
+    print("Please run: pip install python-docx")
+    sys.exit(1)
 
-# Setup Gemini
-# You must set your GEMINI_API_KEY environment variable
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-
-# Detailed prompt to match Compass7 JSON schema
-PROMPT = """
-You are a specialized OCR and data extraction assistant for school timetables.
-Analyze the provided document (image or PDF) and convert it into a strictly formatted JSON object.
-
-TARGET SCHEMA:
-{
-  "timetable": {
-    "class": "Class Name (e.g., IB Grade 10 Class 8)",
-    "schedule": [
-      {
-        "day": "Monday",
-        "periods": [
-          {
-            "period": "1",
-            "time": "8:00 - 8:40",
-            "options": [
-              { "subject": "Subject Name", "room": "Room (or null)" }
-            ]
-          }
-        ]
-      }
-    ]
-  }
+TIMES = {
+    "1": "8:00 - 8:40",
+    "2": "8:45 - 9:25",
+    "3": "9:35 - 10:15",
+    "4": "10:20 - 11:00",
+    "5": "11:05 - 11:55",
+    "Lunch Period": "12:00 - 12:40",
+    "6": "12:45 - 13:25",
+    "7": "13:30 - 14:10",
+    "8": "14:15 - 14:55",
+    "9": "15:00 - 15:40",
+    "10": "15:45 - 16:25",
 }
 
-RULES:
-1. Days must be: Monday, Tuesday, Wednesday, Thursday, Friday.
-2. If multiple subjects share the same time slot (electives), list them all in the 'options' array.
-3. If only one subject exists, the 'options' array should have one object.
-4. For empty slots or break times, use "None" or "Lunch" as the subject.
-5. Times must be in 'HH:MM - HH:MM' format.
-6. Rooms should be strings if present, otherwise null.
-7. Output ONLY the raw JSON. No markdown code blocks.
-"""
-
-def convert_timetable(file_path: str, output_path: str = "timetable_data.json"):
-    if not os.path.exists(file_path):
-        print(f"Error: File {file_path} not found.")
-        return
-
-    # Choose a model
-    model = genai.GenerativeModel("gemini-1.5-flash")
-
-    print(f"Uploading {file_path}...")
-    sample_file = genai.upload_file(path=file_path)
-
-    print("Generating JSON structure...")
-    response = model.generate_content([sample_file, PROMPT])
-
-    try:
-        # Clean response text in case model adds markdown blocks
-        clean_json = response.text.strip().replace("```json", "").replace("```", "")
-        data = json.loads(clean_json)
+def parse_docx(file_path):
+    doc = docx.Document(file_path)
+    table = doc.tables[0]
+    
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    schedule = {day: [] for day in days}
+    
+    for row in table.rows[1:]: # Skip header
+        period = row.cells[0].text.strip()
+        time = TIMES.get(period, "00:00 - 00:00")
         
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=4, ensure_ensure_ascii=False)
+        for i, day in enumerate(days):
+            cell_text = row.cells[i+1].text.strip()
+            subjects = [s.strip() for s in cell_text.split('\n') if s.strip()]
+            options = [{"subject": s, "room": None} for s in subjects]
+            if not options:
+                options = [{"subject": "None", "room": None}]
+                
+            schedule[day].append({
+                "period": period,
+                "time": time,
+                "options": options
+            })
             
-        print(f"Successfully converted! Data saved to: {output_path}")
-        print("\nYou can now copy the contents of this file into the 'TIMETABLE_DATA' variable in your static/index.html.")
-        
-    except json.JSONDecodeError:
-        print("Error: Model did not return valid JSON. Response received:")
-        print(response.text)
+    return {
+        "timetable": {
+            "class": "IB Grade 10 Class 8",
+            "schedule": [{"day": day, "periods": schedule[day]} for day in days]
+        }
+    }
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python convert_timetable.py <path_to_timetable_image_or_pdf>")
-    else:
-        file_arg = sys.argv[1]
-        convert_timetable(file_arg)
+        print("Usage: python convert_timetable.py <file.docx>")
+        sys.exit(1)
+        
+    try:
+        data = parse_docx(sys.argv[1])
+        with open("timetable_data.json", "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+        print("Successfully converted! Data saved to: timetable_data.json")
+    except Exception as e:
+        print(f"Error parsing document: {e}")
