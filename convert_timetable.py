@@ -3,36 +3,37 @@ import json
 import sys
 import base64
 from openai import AzureOpenAI
-from PIL import Image
 
 # Setup Azure OpenAI
-# You must set these environment variables:
-# export AZURE_OPENAI_KEY='your-key'
-# export AZURE_OPENAI_ENDPOINT='https://your-resource.openai.azure.com/'
-# export AZURE_OPENAI_DEPLOYMENT='gpt-4o'
-
 api_key = os.environ.get("AZURE_OPENAI_KEY")
 endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
 deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT")
+api_version = os.environ.get("AZURE_OPENAI_VERSION", "2024-02-01")
 
 if not all([api_key, endpoint, deployment]):
     print("Error: Azure environment variables not fully set.")
-    print("Required: AZURE_OPENAI_KEY, AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_DEPLOYMENT")
     sys.exit(1)
 
 client = AzureOpenAI(
     api_key=api_key,  
-    api_version="2024-02-01",
+    api_version=api_version,
     azure_endpoint=endpoint
 )
 
 PROMPT = """
-Analyze this school timetable image and convert it into a strictly formatted JSON object.
+You are a precision data extraction tool. Your task is to convert the provided school timetable image into a COMPLETE and VALID JSON object.
+
+CRITICAL INSTRUCTIONS:
+1. Process EVERY day (Monday, Tuesday, Wednesday, Thursday, Friday).
+2. Process EVERY period (usually 1 through 10, plus "Lunch Period" and any early/late slots).
+3. Do NOT truncate the output. You must provide the full 5-day schedule.
+4. If a box has multiple subjects (electives), list them ALL in the 'options' array.
+5. Extract the start/end times exactly as shown in the image.
 
 TARGET SCHEMA:
 {
   "timetable": {
-    "class": "Class Name",
+    "class": "Class Name from image",
     "schedule": [
       {
         "day": "Monday",
@@ -41,22 +42,19 @@ TARGET SCHEMA:
             "period": "1",
             "time": "8:00 - 8:40",
             "options": [
-              { "subject": "Subject Name", "room": null }
+              { "subject": "Subject", "room": "Room" }
             ]
           }
         ]
-      }
+      },
+      ... repeat for all days ...
     ]
   }
 }
 
 RULES:
-1. Days: Monday, Tuesday, Wednesday, Thursday, Friday.
-2. Periods: 1-10 and "Lunch Period".
-3. Multiple subjects in one slot? List them all in 'options'.
-4. Empty slot? Use "None" as subject.
-5. Accurate start/end times.
-6. Output ONLY raw JSON.
+- Empty slot = { "subject": "None", "room": null }
+- Output ONLY raw JSON. No conversational text.
 """
 
 def encode_image(image_path):
@@ -68,7 +66,7 @@ def convert_image_to_json(image_path, output_path="timetable_data.json"):
         print(f"Error: File {image_path} not found.")
         return
 
-    print(f"Processing image with Azure OpenAI ({deployment})...")
+    print(f"Processing FULL image with Azure GPT-4o...")
     
     try:
         base64_image = encode_image(image_path)
@@ -83,18 +81,18 @@ def convert_image_to_json(image_path, output_path="timetable_data.json"):
                         {
                             "type": "image_url",
                             "image_url": {
-                                "url": f"data:image/jpeg;base64,{base64_image}"
+                                "url": f"data:image/png;base64,{base64_image}"
                             },
                         },
                     ],
                 }
             ],
-            max_tokens=2000,
+            max_tokens=4096, # Increased to ensure full output
+            temperature=0,    # Set to 0 for maximum precision
         )
         
         text = response.choices[0].message.content.strip()
         
-        # Robust JSON extraction
         if "{" in text:
             start = text.find("{")
             end = text.rfind("}") + 1
