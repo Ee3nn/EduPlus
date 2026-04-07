@@ -1,65 +1,91 @@
-import sys
+import os
 import json
-try:
-    import docx
-except ImportError:
-    print("Please run: pip install python-docx")
+import sys
+import google.generativeai as genai
+from PIL import Image
+
+# Setup Gemini
+# You must set your GEMINI_API_KEY environment variable
+api_key = os.environ.get("GEMINI_API_KEY")
+if not api_key:
+    print("Error: GEMINI_API_KEY environment variable not set.")
     sys.exit(1)
 
-TIMES = {
-    "1": "8:00 - 8:40",
-    "2": "8:45 - 9:25",
-    "3": "9:35 - 10:15",
-    "4": "10:20 - 11:00",
-    "5": "11:05 - 11:55",
-    "Lunch Period": "12:00 - 12:40",
-    "6": "12:45 - 13:25",
-    "7": "13:30 - 14:10",
-    "8": "14:15 - 14:55",
-    "9": "15:00 - 15:40",
-    "10": "15:45 - 16:25",
+genai.configure(api_key=api_key)
+
+# Detailed prompt to match Compass7 JSON schema
+PROMPT = """
+Analyze this school timetable image and convert it into a strictly formatted JSON object.
+
+TARGET SCHEMA:
+{
+  "timetable": {
+    "class": "Class Name",
+    "schedule": [
+      {
+        "day": "Monday",
+        "periods": [
+          {
+            "period": "1",
+            "time": "8:00 - 8:40",
+            "options": [
+              { "subject": "Subject Name", "room": null }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }
 
-def parse_docx(file_path):
-    doc = docx.Document(file_path)
-    table = doc.tables[0]
+RULES:
+1. Days must be: Monday, Tuesday, Wednesday, Thursday, Friday.
+2. Periods are usually 1-10 plus a "Lunch Period".
+3. If multiple subjects are in one box (electives), list them all in 'options'.
+4. For empty boxes, use "None" as the subject.
+5. Extract the start and end times for each period accurately.
+6. Output ONLY the raw JSON. No markdown blocks.
+"""
+
+def convert_image_to_json(image_path, output_path="timetable_data.json"):
+    if not os.path.exists(image_path):
+        print(f"Error: File {image_path} not found.")
+        return
+
+    print(f"Processing image: {image_path}...")
     
-    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    schedule = {day: [] for day in days}
-    
-    for row in table.rows[1:]: # Skip header
-        period = row.cells[0].text.strip()
-        time = TIMES.get(period, "00:00 - 00:00")
+    try:
+        # Load image
+        img = Image.open(image_path)
         
-        for i, day in enumerate(days):
-            cell_text = row.cells[i+1].text.strip()
-            subjects = [s.strip() for s in cell_text.split('\n') if s.strip()]
-            options = [{"subject": s, "room": None} for s in subjects]
-            if not options:
-                options = [{"subject": "None", "room": None}]
-                
-            schedule[day].append({
-                "period": period,
-                "time": time,
-                "options": options
-            })
+        # Initialize model
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        
+        # Generate content
+        response = model.generate_content([PROMPT, img])
+        
+        # Clean and parse JSON
+        text = response.text.strip()
+        if text.startswith("```json"):
+            text = text[7:-3]
+        elif text.startswith("```"):
+            text = text[3:-3]
             
-    return {
-        "timetable": {
-            "class": "IB Grade 10 Class 8",
-            "schedule": [{"day": day, "periods": schedule[day]} for day in days]
-        }
-    }
+        data = json.loads(text)
+        
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+            
+        print(f"Successfully converted! Data saved to: {output_path}")
+        
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        if hasattr(response, 'text'):
+            print("Model response was:")
+            print(response.text)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python convert_timetable.py <file.docx>")
-        sys.exit(1)
-        
-    try:
-        data = parse_docx(sys.argv[1])
-        with open("timetable_data.json", "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4, ensure_ascii=False)
-        print("Successfully converted! Data saved to: timetable_data.json")
-    except Exception as e:
-        print(f"Error parsing document: {e}")
+        print("Usage: python convert_timetable.py <path_to_image.png>")
+    else:
+        convert_image_to_json(sys.argv[1])
