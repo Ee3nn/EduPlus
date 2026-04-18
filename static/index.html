@@ -593,14 +593,17 @@
         const switchToLogin = document.getElementById('switchToLogin');
 
         let currentUser = localStorage.getItem('mi_user');
+        let isAdmin = localStorage.getItem('mi_admin') === 'true';
 
-        const updateAuthUI = (username, profilePic) => {
+        const updateAuthUI = (username, profilePic, isUserAdmin) => {
             const span = authBtn.querySelector('span');
             const navAvatar = document.getElementById('navAvatar');
             const navUserIcon = document.getElementById('navUserIcon');
+            const adminBadge = document.getElementById('adminBadge');
             
             if (username) {
                 span.innerText = username;
+                adminBadge.classList.toggle('hidden', !isUserAdmin);
                 if (profilePic) {
                     navAvatar.src = profilePic;
                     navAvatar.classList.remove('hidden');
@@ -611,6 +614,7 @@
                 }
             } else {
                 span.innerText = 'Sign In';
+                adminBadge.classList.add('hidden');
                 navAvatar.classList.add('hidden');
                 navUserIcon.classList.remove('hidden');
             }
@@ -618,7 +622,7 @@
 
         // Initial UI Update
         if (currentUser) {
-            updateAuthUI(currentUser, localStorage.getItem('mi_avatar'));
+            updateAuthUI(currentUser, localStorage.getItem('mi_avatar'), isAdmin);
         }
 
         const openProfile = async () => {
@@ -629,6 +633,9 @@
                 document.getElementById('profileEmail').value = data.email;
                 document.getElementById('profilePassword').value = '';
                 
+                isAdmin = data.is_admin;
+                localStorage.setItem('mi_admin', isAdmin);
+
                 if (data.electives) {
                     selectedElectives = JSON.parse(data.electives);
                     renderElectives();
@@ -646,13 +653,15 @@
                     placeholder.classList.remove('hidden');
                     localStorage.removeItem('mi_avatar');
                 }
-                updateAuthUI(data.username, data.profile_pic);
+                updateAuthUI(data.username, data.profile_pic, data.is_admin);
                 
                 profileModal.classList.remove('hidden');
             } else {
                 localStorage.removeItem('mi_user');
                 localStorage.removeItem('mi_avatar');
+                localStorage.removeItem('mi_admin');
                 currentUser = null;
+                isAdmin = false;
                 updateAuthUI(null);
                 authModal.classList.remove('hidden');
             }

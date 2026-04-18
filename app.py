@@ -36,6 +36,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     profile_pic = db.Column(db.String(200), nullable=True)
     selected_electives = db.Column(db.Text, nullable=True)
+    is_admin = db.Column(db.Boolean, default=False)
 
 with app.app_context():
     db.create_all()
@@ -47,6 +48,15 @@ with app.app_context():
             db.session.execute(db.text("ALTER TABLE user ADD COLUMN selected_electives TEXT"))
         if 'profile_pic' not in columns:
             db.session.execute(db.text("ALTER TABLE user ADD COLUMN profile_pic VARCHAR(200)"))
+        if 'is_admin' not in columns:
+            db.session.execute(db.text("ALTER TABLE user ADD COLUMN is_admin BOOLEAN DEFAULT 0"))
+        
+        # Promote EthanMiao to admin
+        admin_user = User.query.filter_by(username='EthanMiao').first()
+        if admin_user:
+            admin_user.is_admin = True
+            db.session.commit()
+            
         db.session.commit()
     except Exception as e:
         print(f"Database migration info: {e}")
@@ -126,7 +136,9 @@ def register():
             return jsonify({"message": "Email already registered"}), 400
 
         hashed_pw = generate_password_hash(password)
-        new_user = User(username=username, email=email, password_hash=hashed_pw)
+        # Check if this should be admin (optional: first user could be admin, or specific username)
+        is_admin = (username == 'EthanMiao')
+        new_user = User(username=username, email=email, password_hash=hashed_pw, is_admin=is_admin)
         db.session.add(new_user)
         db.session.commit()
         return jsonify({"message": "User registered successfully"}), 201
@@ -154,7 +166,8 @@ def login():
             return jsonify({
                 "message": "Login successful", 
                 "username": user.username,
-                "electives": user.selected_electives
+                "electives": user.selected_electives,
+                "is_admin": user.is_admin
             }), 200
         
         return jsonify({"message": "Invalid credentials"}), 401
@@ -180,7 +193,8 @@ def get_profile():
         "username": user.username,
         "email": user.email,
         "profile_pic": f"/static/uploads/avatars/{user.profile_pic}" if user.profile_pic else None,
-        "electives": user.selected_electives
+        "electives": user.selected_electives,
+        "is_admin": user.is_admin
     }), 200
 
 @app.route("/profile/update", methods=['POST'])
