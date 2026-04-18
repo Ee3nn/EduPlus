@@ -1,4 +1,5 @@
 import os
+import json
 from flask import Flask, send_from_directory, request, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_, inspect
@@ -200,7 +201,7 @@ def get_profile():
 @app.route("/api/timetable", methods=['GET'])
 def get_timetable():
     try:
-        with open('timetable_data.json', 'r', encoding='utf-8') as f:
+        with open(os.path.join(basedir, 'timetable_data.json'), 'r', encoding='utf-8') as f:
             data = json.load(f)
         return jsonify(data), 200
     except Exception as e:
@@ -221,11 +222,11 @@ def update_timetable():
             return jsonify({"message": "Invalid JSON"}), 400
             
         # Save to main file
-        with open('timetable_data.json', 'w', encoding='utf-8') as f:
+        with open(os.path.join(basedir, 'timetable_data.json'), 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
             
         # Also sync to static file for frontend compatibility if needed
-        with open('static/preibcourses.json', 'w', encoding='utf-8') as f:
+        with open(os.path.join(basedir, 'static/preibcourses.json'), 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
             
         return jsonify({"message": "Timetable updated successfully"}), 200
