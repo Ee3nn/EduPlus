@@ -272,721 +272,91 @@
     <script>
         const TIMETABLE_DATA = {
     "timetable": {
-        "class": "IB grade 10 class 8 - m缪",
+        "class": "IB Grade 10 Class 8",
         "schedule": [
             {
                 "day": "Monday",
                 "periods": [
-                    {
-                        "period": "0",
-                        "time": "7:40 - 7:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "1",
-                        "time": "8:00 - 8:40",
-                        "options": [
-                            {
-                                "subject": "Lit",
-                                "room": "A411"
-                            },
-                            {
-                                "subject": "L&L",
-                                "room": "A411"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "2",
-                        "time": "8:45 - 9:25",
-                        "options": [
-                            {
-                                "subject": "Chem1",
-                                "room": "A403"
-                            },
-                            {
-                                "subject": "Bio1",
-                                "room": "A403"
-                            },
-                            {
-                                "subject": "Phy1",
-                                "room": "A403"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "3",
-                        "time": "9:35 - 10:15",
-                        "options": [
-                            {
-                                "subject": "Math",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "4",
-                        "time": "10:20 - 11:00",
-                        "options": [
-                            {
-                                "subject": "信息技术",
-                                "room": "HS Theatre"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "5",
-                        "time": "11:05 - 11:55",
-                        "options": [
-                            {
-                                "subject": "Econ1",
-                                "room": "A403"
-                            },
-                            {
-                                "subject": "Phi1",
-                                "room": "A404"
-                            },
-                            {
-                                "subject": "VA1",
-                                "room": "A109"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "Lunch Period",
-                        "time": "12:00 - 12:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "6",
-                        "time": "12:45 - 13:25",
-                        "options": [
-                            {
-                                "subject": "Eng",
-                                "room": "Shaun"
-                            },
-                            {
-                                "subject": "Eng",
-                                "room": "A413"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "7",
-                        "time": "13:30 - 14:10",
-                        "options": [
-                            {
-                                "subject": "Eng",
-                                "room": "Shaun"
-                            },
-                            {
-                                "subject": "Eng",
-                                "room": "A413"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "8",
-                        "time": "14:15 - 14:55",
-                        "options": [
-                            {
-                                "subject": "化学",
-                                "room": "G2"
-                            },
-                            {
-                                "subject": "物理",
-                                "room": "G3"
-                            },
-                            {
-                                "subject": "生物",
-                                "room": "HS Theatre"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "9",
-                        "time": "15:00 - 15:40",
-                        "options": [
-                            {
-                                "subject": "CS1",
-                                "room": "A405"
-                            },
-                            {
-                                "subject": "Bus1",
-                                "room": "A401"
-                            },
-                            {
-                                "subject": "Geo1",
-                                "room": "A402"
-                            },
-                            {
-                                "subject": "ESS1",
-                                "room": "A406"
-                            },
-                            {
-                                "subject": "Psy1",
-                                "room": "A422"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "10",
-                        "time": "15:45 - 16:25",
-                        "options": [
-                            {
-                                "subject": "CS1",
-                                "room": "A405"
-                            },
-                            {
-                                "subject": "Bus1",
-                                "room": "A401"
-                            },
-                            {
-                                "subject": "Geo1",
-                                "room": "A402"
-                            },
-                            {
-                                "subject": "ESS1",
-                                "room": "A406"
-                            },
-                            {
-                                "subject": "Psy1",
-                                "room": "A422"
-                            }
-                        ]
-                    }
+                    { "period": "1", "time": "8:00 - 8:40", "options": [{ "subject": "IB Lit", "room": "A411" }, { "subject": "IB L&L", "room": "A411" }] },
+                    { "period": "2", "time": "8:45 - 9:25", "options": [{ "subject": "IB Chem1", "room": "A403" }, { "subject": "IB Bio1", "room": "A403" }, { "subject": "IB Phy1", "room": "A403" }] },
+                    { "period": "3", "time": "9:35 - 10:15", "options": [{ "subject": "IB Math", "room": null }] },
+                    { "period": "4", "time": "10:20 - 11:00", "options": [{ "subject": "Nat 信息技术", "room": "HS Theatre" }] },
+                    { "period": "5", "time": "11:05 - 11:55", "options": [{ "subject": "Lunch", "room": null }] },
+                    { "period": "Lunch Period", "time": "12:00 - 12:40", "options": [{ "subject": "IB Chem2", "room": null }, { "subject": "IB Bio2", "room": null }, { "subject": "IB Phy2", "room": null }] },
+                    { "period": "6", "time": "12:45 - 13:25", "options": [{ "subject": "IB EngB", "room": "Shaun" }] },
+                    { "period": "7", "time": "13:30 - 14:10", "options": [{ "subject": "None", "room": null }] },
+                    { "period": "8", "time": "14:15 - 14:55", "options": [{ "subject": "Nat 化学", "room": "G2" }, { "subject": "Nat 物理", "room": "G3" }, { "subject": "Nat 生物", "room": "HS Theatre" }] },
+                    { "period": "9", "time": "15:00 - 15:40", "options": [{ "subject": "Nat 化学", "room": "G2" }, { "subject": "Nat 物理", "room": "G3" }, { "subject": "Nat 生物", "room": "HS Theatre" }] },
+                    { "period": "10", "time": "15:45 - 16:25", "options": [{ "subject": "IB CS1", "room": "A405" }, { "subject": "IB Bus1", "room": "A401" }, { "subject": "IB Geo1", "room": "A402" }] }
                 ]
             },
             {
                 "day": "Tuesday",
                 "periods": [
-                    {
-                        "period": "0",
-                        "time": "7:40 - 7:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "1",
-                        "time": "8:00 - 8:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "2",
-                        "time": "8:45 - 9:25",
-                        "options": [
-                            {
-                                "subject": "心理健康",
-                                "room": "Wu Chenhong"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "3",
-                        "time": "9:35 - 10:15",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "4",
-                        "time": "10:20 - 11:00",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "5",
-                        "time": "11:05 - 11:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "Lunch Period",
-                        "time": "12:00 - 12:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "6",
-                        "time": "12:45 - 13:25",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "7",
-                        "time": "13:30 - 14:10",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "8",
-                        "time": "14:15 - 14:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "9",
-                        "time": "15:00 - 15:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "10",
-                        "time": "15:45 - 16:25",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    }
+                    { "period": "1", "time": "8:00 - 8:40", "options": [{ "subject": "None", "room": null }] },
+                    { "period": "2", "time": "8:45 - 9:25", "options": [{ "subject": "Nat 心理健康", "room": "Wu Chenhong" }] },
+                    { "period": "3", "time": "9:35 - 10:15", "options": [{ "subject": "IB Econ1", "room": "A403" }, { "subject": "IB Phi1", "room": "A404" }, { "subject": "IB VA1", "room": "A109" }] },
+                    { "period": "4", "time": "10:20 - 11:00", "options": [{ "subject": "IB Econ1", "room": "A403" }, { "subject": "IB Phi1", "room": "A404" }, { "subject": "IB VA1", "room": "A109" }] },
+                    { "period": "5", "time": "11:05 - 11:55", "options": [{ "subject": "IB Chem1", "room": "A403" }, { "subject": "IB Bio1", "room": "A403" }, { "subject": "IB Phy1", "room": "A403" }] },
+                    { "period": "Lunch Period", "time": "12:00 - 12:40", "options": [{ "subject": "Lunch", "room": null }] },
+                    { "period": "6", "time": "12:45 - 13:25", "options": [{ "subject": "IB EngB", "room": "Shaun" }] },
+                    { "period": "7", "time": "13:30 - 14:10", "options": [{ "subject": "IB CS1", "room": "A405" }, { "subject": "IB Bus1", "room": "A401" }, { "subject": "IB Geo1", "room": "A402" }] },
+                    { "period": "8", "time": "14:15 - 14:55", "options": [{ "subject": "PE", "room": null }] },
+                    { "period": "9", "time": "15:00 - 15:40", "options": [{ "subject": "IB Math", "room": null }] },
+                    { "period": "10", "time": "15:45 - 16:25", "options": [{ "subject": "None", "room": null }] }
                 ]
             },
             {
                 "day": "Wednesday",
                 "periods": [
-                    {
-                        "period": "0",
-                        "time": "7:40 - 7:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "1",
-                        "time": "8:00 - 8:40",
-                        "options": [
-                            {
-                                "subject": "Chem1",
-                                "room": "A403"
-                            },
-                            {
-                                "subject": "Bio1",
-                                "room": "A403"
-                            },
-                            {
-                                "subject": "Phy1",
-                                "room": "A403"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "2",
-                        "time": "8:45 - 9:25",
-                        "options": [
-                            {
-                                "subject": "Chem1",
-                                "room": "A403"
-                            },
-                            {
-                                "subject": "Bio1",
-                                "room": "A403"
-                            },
-                            {
-                                "subject": "Phy1",
-                                "room": "A403"
-                            }
-                        ]
-                    },
-                    {
-                        "period": "3",
-                        "time": "9:35 - 10:15",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "4",
-                        "time": "10:20 - 11:00",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "5",
-                        "time": "11:05 - 11:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "Lunch Period",
-                        "time": "12:00 - 12:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "6",
-                        "time": "12:45 - 13:25",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "7",
-                        "time": "13:30 - 14:10",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "8",
-                        "time": "14:15 - 14:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "9",
-                        "time": "15:00 - 15:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "10",
-                        "time": "15:45 - 16:25",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    }
+                    { "period": "1", "time": "8:00 - 8:40", "options": [{ "subject": "IB Chem1", "room": "A403" }, { "subject": "IB Bio1", "room": "A403" }, { "subject": "IB Phy1", "room": "A403" }] },
+                    { "period": "2", "time": "8:45 - 9:25", "options": [{ "subject": "IB EngB", "room": "Shaun" }] },
+                    { "period": "3", "time": "9:35 - 10:15", "options": [{ "subject": "IB Geo2", "room": "A402" }, { "subject": "IB Bus2", "room": "A401" }, { "subject": "IB His2", "room": "A404" }] },
+                    { "period": "4", "time": "10:20 - 11:00", "options": [{ "subject": "IB VA2", "room": "A109" }, { "subject": "IB Mus2", "room": "A108" }, { "subject": "IB Econ2", "room": "A403" }] },
+                    { "period": "5", "time": "11:05 - 11:55", "options": [{ "subject": "None", "room": null }] },
+                    { "period": "Lunch Period", "time": "12:00 - 12:40", "options": [{ "subject": "Lunch", "room": null }] },
+                    { "period": "6", "time": "12:45 - 13:25", "options": [{ "subject": "IB Chem2", "room": null }, { "subject": "IB Bio2", "room": null }, { "subject": "IB Phy2", "room": null }] },
+                    { "period": "7", "time": "13:30 - 14:10", "options": [{ "subject": "PD", "room": null }] },
+                    { "period": "8", "time": "14:15 - 14:55", "options": [{ "subject": "None", "room": null }] },
+                    { "period": "9", "time": "15:00 - 15:40", "options": [{ "subject": "IB Math", "room": null }] },
+                    { "period": "10", "time": "15:45 - 16:25", "options": [{ "subject": "Nat 语文", "room": null }] }
                 ]
             },
             {
                 "day": "Thursday",
                 "periods": [
-                    {
-                        "period": "0",
-                        "time": "7:40 - 7:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "1",
-                        "time": "8:00 - 8:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "2",
-                        "time": "8:45 - 9:25",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "3",
-                        "time": "9:35 - 10:15",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "4",
-                        "time": "10:20 - 11:00",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "5",
-                        "time": "11:05 - 11:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "Lunch Period",
-                        "time": "12:00 - 12:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "6",
-                        "time": "12:45 - 13:25",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "7",
-                        "time": "13:30 - 14:10",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "8",
-                        "time": "14:15 - 14:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "9",
-                        "time": "15:00 - 15:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "10",
-                        "time": "15:45 - 16:25",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    }
+                    { "period": "1", "time": "8:00 - 8:40", "options": [{ "subject": "Nat 历史", "room": "A404" }] },
+                    { "period": "2", "time": "8:45 - 9:25", "options": [{ "subject": "IB EngB", "room": "Shaun" }] },
+                    { "period": "3", "time": "9:35 - 10:15", "options": [{ "subject": "IB Chem1", "room": "A403" }, { "subject": "IB Bio1", "room": "A403" }, { "subject": "IB Phy1", "room": "A403" }] },
+                    { "period": "4", "time": "10:20 - 11:00", "options": [{ "subject": "Nat 艺术", "room": "A109" }] },
+                    { "period": "5", "time": "11:05 - 11:55", "options": [{ "subject": "IB Lit", "room": "A411" }, { "subject": "IB L&L", "room": "A411" }] },
+                    { "period": "Lunch Period", "time": "12:00 - 12:40", "options": [{ "subject": "Lunch", "room": null }] },
+                    { "period": "6", "time": "12:45 - 13:25", "options": [{ "subject": "IB Chem2", "room": null }, { "subject": "IB Bio2", "room": null }, { "subject": "IB Phy2", "room": null }] },
+                    { "period": "7", "time": "13:30 - 14:10", "options": [{ "subject": "Nat 思政", "room": "A404" }] },
+                    { "period": "8", "time": "14:15 - 14:55", "options": [{ "subject": "PE", "room": null }] },
+                    { "period": "9", "time": "15:00 - 15:40", "options": [{ "subject": "IB Math", "room": null }] },
+                    { "period": "10", "time": "15:45 - 16:25", "options": [{ "subject": "None", "room": null }] }
                 ]
             },
             {
                 "day": "Friday",
                 "periods": [
-                    {
-                        "period": "0",
-                        "time": "7:40 - 7:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "1",
-                        "time": "8:00 - 8:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "2",
-                        "time": "8:45 - 9:25",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "3",
-                        "time": "9:35 - 10:15",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "4",
-                        "time": "10:20 - 11:00",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "5",
-                        "time": "11:05 - 11:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "Lunch Period",
-                        "time": "12:00 - 12:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "6",
-                        "time": "12:45 - 13:25",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "7",
-                        "time": "13:30 - 14:10",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "8",
-                        "time": "14:15 - 14:55",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "9",
-                        "time": "15:00 - 15:40",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    },
-                    {
-                        "period": "10",
-                        "time": "15:45 - 16:25",
-                        "options": [
-                            {
-                                "subject": "None",
-                                "room": null
-                            }
-                        ]
-                    }
+                    { "period": "1", "time": "8:00 - 8:40", "options": [{ "subject": "Nat 语文", "room": null }] },
+                    { "period": "2", "time": "8:45 - 9:25", "options": [{ "subject": "IB Geo2", "room": "A402" }, { "subject": "IB Bus2", "room": "A401" }, { "subject": "IB His2", "room": "A404" }] },
+                    { "period": "3", "time": "9:35 - 10:15", "options": [{ "subject": "Nat 地理", "room": "A402" }] },
+                    { "period": "4", "time": "10:20 - 11:00", "options": [{ "subject": "CW", "room": null }, { "subject": "JP", "room": null }, { "subject": "IC", "room": null }, { "subject": "Linguistics", "room": null }] },
+                    { "period": "5", "time": "11:05 - 11:55", "options": [{ "subject": "None", "room": null }] },
+                    { "period": "Lunch Period", "time": "12:00 - 12:40", "options": [{ "subject": "Lunch", "room": null }] },
+                    { "period": "6", "time": "12:45 - 13:25", "options": [{ "subject": "IB Chem2", "room": null }, { "subject": "IB Bio2", "room": null }, { "subject": "IB Phy2", "room": null }] },
+                    { "period": "7", "time": "13:30 - 14:10", "options": [{ "subject": "Class Meeting", "room": null }] },
+                    { "period": "8", "time": "14:15 - 14:55", "options": [{ "subject": "None", "room": null }] },
+                    { "period": "9", "time": "15:00 - 15:40", "options": [{ "subject": "None", "room": null }] },
+                    { "period": "10", "time": "15:45 - 16:25", "options": [{ "subject": "None", "room": null }] }
                 ]
             }
         ]
     }
 };
-
         const NO_ATTENDANCE = "No Attendance";
         let isDarkMode = true;
         let selectedElectives = {};
