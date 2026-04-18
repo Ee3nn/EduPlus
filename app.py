@@ -1,6 +1,7 @@
 import os
 from flask import Flask, send_from_directory, request, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_, inspect
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from PIL import Image
@@ -38,6 +39,17 @@ class User(db.Model):
 
 with app.app_context():
     db.create_all()
+    # Migration: Ensure columns exist (for existing DBs)
+    try:
+        inspector = inspect(db.engine)
+        columns = [c['name'] for c in inspector.get_columns('user')]
+        if 'selected_electives' not in columns:
+            db.session.execute(db.text("ALTER TABLE user ADD COLUMN selected_electives TEXT"))
+        if 'profile_pic' not in columns:
+            db.session.execute(db.text("ALTER TABLE user ADD COLUMN profile_pic VARCHAR(200)"))
+        db.session.commit()
+    except Exception as e:
+        print(f"Database migration info: {e}")
 
 @app.route("/")
 def index():
@@ -135,7 +147,7 @@ def login():
         if not login_id or not password:
             return jsonify({"message": "Username/Email and Password are required"}), 400
 
-        user = User.query.filter((User.username == login_id) | (User.email == login_id)).first()
+        user = User.query.filter(or_(User.username == login_id, User.email == login_id)).first()
 
         if user and check_password_hash(user.password_hash, password):
             session['user_id'] = user.id
