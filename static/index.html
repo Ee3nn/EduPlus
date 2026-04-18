@@ -889,6 +889,8 @@
         window.switchView = (viewId) => {
             document.getElementById('homeView').classList.toggle('hidden', viewId !== 'homeView');
             document.getElementById('timetableTool').classList.toggle('hidden', viewId !== 'timetableTool');
+            const adminEl = document.getElementById('adminConsole');
+            if (adminEl) adminEl.classList.toggle('hidden', viewId !== 'adminConsole');
             document.getElementById('actionBar').classList.toggle('hidden', viewId !== 'timetableTool');
             window.scrollTo(0, 0);
         };
